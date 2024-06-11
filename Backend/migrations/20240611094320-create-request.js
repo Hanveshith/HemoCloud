@@ -27,6 +27,9 @@ module.exports = {
       Hospital: {
         type: Sequelize.STRING
       },
+      rejected: {
+        type: Sequelize.BOOLEAN
+      },
       status: {
         type: Sequelize.BOOLEAN
       },

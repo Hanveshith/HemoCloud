@@ -70,6 +70,11 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    rejected: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // Sets a default value if not provided
+    },
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
