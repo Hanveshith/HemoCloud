@@ -1,4 +1,4 @@
-const {Donor} = require('../../models');
+const {Donor,Donation} = require('../../models');
 
 const fetchDonorStatus = async (req, res) => {
     try {
@@ -19,5 +19,23 @@ const fetchDonorStatus = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 };
+
+
+const previousDonations = async(req,res) => {
+    try{
+        const {donorId} = req.body;
+        const donations = await Donation.findAll({
+            where: {
+                donorId,
+                status: true
+            }
+        });
+        res.status(200).json(donations);
+    }
+    catch(error){
+        res.status(400).json({error: error.message});
+    }
+}
+
 
 module.exports = {fetchDonorStatus};

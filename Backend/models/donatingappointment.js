@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'bloodBank',
         onDelete: 'CASCADE'
       })
-      
+      DonatingAppointment.hasOne(models.BloodBank, {
+        foreignKey: 'donatingAppointmentId',
+        as: 'donatingAppointments',
+        onDelete: 'CASCADE'
+      })
     }
   }
   DonatingAppointment.init({

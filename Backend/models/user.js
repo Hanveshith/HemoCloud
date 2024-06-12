@@ -104,7 +104,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['admin', 'user']], // Ensures the role is either 'admin' or 'user'
+        isIn: [['admin', 'donor', 'receiver']], // Ensures the role is either 'admin' or 'user'
       },
     },
     donorStatus: {
