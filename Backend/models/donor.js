@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Donor.init({
-    previousDonation_date: {
+    priveousDonation_date: {
       type: DataTypes.DATE,
       allowNull: true,
       validate: {
