@@ -3,6 +3,7 @@ const {Donor} = require('../../models');
 
 const becomeDonor = async (req, res) => {
     try {
+        console.log(req.body)
         const {userId, bloodBankId} = req.body;
         const donor = await Donor.create({
             userId,

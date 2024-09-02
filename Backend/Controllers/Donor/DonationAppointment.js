@@ -1,14 +1,15 @@
 
-const {DonationAppointment} = require('../../models');
+const { DataTypes } = require('sequelize');
+const {DonatingAppointment} = require('../../models');
 
 const createDonationAppointment = async (req, res) => {
     try {
-        const {donorId, bloodBankId, datetime, quatity} = req.body;
-        const donationAppointment = await DonationAppointment.create({
+        const {donorId, bloodBankId, dateTime, quantity} = req.body;
+        const donationAppointment = await DonatingAppointment.create({
             donorId,
             bloodBankId,
-            datetime,
-            quatity,
+            dateTime,
+            quantity,
             status: false
         });
         res.status(201).json(donationAppointment);
@@ -20,11 +21,10 @@ const createDonationAppointment = async (req, res) => {
 
 const DonationAppointments = async (req, res) => {
     try {
-        const {donorId,date} = req.body;
-        const donationAppointment = await DonationAppointment.findAll({
+        const {donorId} = req.body;
+        const donationAppointment = await DonatingAppointment.findAll({
             where: {
                 donorId,
-                datetime: date.toISOString().split('T')[0]
             }
         });
         if(!donationAppointment) {
@@ -41,10 +41,9 @@ const DonationAppointments = async (req, res) => {
 const LatestAppointment = async (req, res) => {
     try {
         const {donorId} = req.body;
-        const donationAppointment = await DonationAppointment.findOne({
+        const donationAppointment = await DonatingAppointment.findOne({
             where: {
                 donorId,
-                status: false
             },
             order: [['createdAt', 'DESC']]
         });
@@ -62,7 +61,7 @@ const LatestAppointment = async (req, res) => {
 const CancelAppointment = async (req, res) => {
     try {
         const {donorId, donationAppointmentId} = req.body;
-        const donationAppointment = await DonationAppointment.destroy({
+        const donationAppointment = await DonatingAppointment.destroy({
             where: {
                 donorId,
                 id: donationAppointmentId

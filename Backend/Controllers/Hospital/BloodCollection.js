@@ -75,4 +75,4 @@ const deleteBloodCollection = async (req, res) => {
 };
 
 
-
+module.exports = {createBloodCollection,fetchBloodCollection,updateBloodCollection,deleteBloodCollection};

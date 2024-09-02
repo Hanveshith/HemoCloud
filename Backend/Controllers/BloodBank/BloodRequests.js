@@ -2,13 +2,13 @@ const {Request,BloodBank} = require('../../models')
 
 const fetchBloodRequests = async (req, res) => {
     try {
-        const {bloodBankId} = req.body;
+        const bloodBankId = req.params.id;
         const requests = await Request.findAll({
             where: {
                 bloodBankId,
                 status: false,
                 rejected: false,
-                date: new Date().toISOString().split('T')[0]
+                // date: new Date().toISOString().split('T')[0]
             }
         });
         if(!requests) {

@@ -55,6 +55,13 @@ module.exports = (sequelize, DataTypes) => {
         is: /^\d{10}$/, // Validates 10 digit phone numbers
       },
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     latitude: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       Request.belongsTo(models.Hospital, {
         foreignKey: 'hospitalId',
         as: 'hospital',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        allowNull: true,
       })
       Request.belongsTo(models.BloodBank, {
         foreignKey: 'bloodBankId',

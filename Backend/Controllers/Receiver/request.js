@@ -1,20 +1,22 @@
 
+const { DATE } = require('sequelize');
 const {Request} = require('../../models');
 
 const createRequest = async (req, res) => {
     try {
-        const {userId, bloodBankId, hospitalId, group, quantity, date, currLocation_lat, currLocation_long, Hospital} = req.body;
+        const {userId, bloodBankId, hospitalId, group, quantity, currLocation_Lat, currLocation_Long} = req.body;
+        console.log(req.body)
         const request = await Request.create({
             userId,
             bloodBankId,
             hospitalId,
             group,
             quantity,
-            date,
-            currLocation_lat,
-            currLocation_long,
-            Hospital,
-            status: false
+            currLocation_Lat,
+            currLocation_Long,
+            status: false,
+            date: new Date(),
+            Hospital: "ANR"
         });
         res.status(201).json(request);
     }
@@ -91,4 +93,4 @@ const rejectedrequests = async(req,res) => {
 };
 
 
-module.exports = {createRequest};
+module.exports = {createRequest, recentRequest, requeststhroughdate, acceptedrequests, rejectedrequests};
