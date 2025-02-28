@@ -6,8 +6,13 @@ const {BloodBank} = require('../../models');
 const login = async (req, res) => {
     try {
         const {phone, password} = req.body;
+        console.log(req.body);
         const handle = req.params.handle;
-        const existingUser = await (handle == "bank" ? BloodBank.findOne({ phone: phone }) : User.findOne({ phone: phone }));
+        const existingUser = await (handle == "bank" ? BloodBank.findOne({ phone: phone }) : User.findOne({
+            where: { phone: phone }
+        }));
+        
+        console.log("existing",existingUser);
         if (!existingUser)
             return res.status(401).json({ errorMessage: "Wrong username or password." });
         const passwordCorrect = await bcrypt.compare(
@@ -22,7 +27,7 @@ const login = async (req, res) => {
         const Role = handle == "bank" ? "bank" : existingUser.role;
         const token = jwt.sign(
             {
-                user: existingUser._id,
+                user: existingUser.id,
                 type: handle,
                 role: Role  
             },

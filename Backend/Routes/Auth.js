@@ -14,8 +14,8 @@ route.get("/loggedIn", async (req, res) => {
         const token = req.cookies.token;
         if (!token) return res.json({ auth: false });
         const verified = jwt.verify(token, "kjnasjnnjsanhfhakaosihvihaabvnhunakwsncaksnnedfev");
-        const user = await (verified.type == "bank" ? BloodBank : User).findOne({ _id: verified.user }, { password: 0, donations: 0, requests: 0, stock: 0, __v: 0 });
-        console.log("logged in")
+        const user = await (verified.type == "bank" ? BloodBank : User).findByPk(verified.user);
+        if (!user) return res.json({ auth: false });
         res.send({ auth: true, user: user , role: verified.role});
     } catch (err) {
         console.log(err);

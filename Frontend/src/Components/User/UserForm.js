@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import mapboxgl from 'mapbox-gl';
 
 
+
 const UserForm = () => {
     const { handle } = useParams();
     const { user } = useContext(AuthContext);
@@ -23,6 +24,8 @@ const UserForm = () => {
     const [me, setMe] = useState(false);
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
+    const [datetime, setDatetime] = useState(new Date());
+    const [donorId, setDonorId] = useState(0);
     const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     useEffect(() => {
         if (handle == "donate") {
@@ -36,19 +39,7 @@ const UserForm = () => {
         setGender(me ? user.gender : "male")
     }, [me]);
 
-
-    const donate = () => {
-        const formData = {
-            bankId: bank,
-            units: units,
-        };
-        axios.post("/user/donate", formData, { withCredentials: true }).then((r) => {
-            alert("Donation request sent successfully");
-            navigate("/user/donations");
-        }).catch((e) => {
-            alert("Something went wrong");
-        });
-    };
+    
 
     const request = () => {
         const formData = {
@@ -95,6 +86,31 @@ const UserForm = () => {
         });
     }, []);
 
+
+    const donate = () => {
+        try {
+            axios.get(`/u/donor/donor-status/${user.id}`,{ withCredentials: true }).then((r) => {
+                setDonorId(r.data.id);
+            }).catch((e) => {
+                alert("Something went wrong");
+            });
+            const formData = {
+                donorId: donorId,
+                bloodBankId: bank,
+                dateTime: datetime,
+                quantity: units,
+            };
+            axios.post("/u/donor/create-donation-appointment", formData, { withCredentials: true }).then((r) => {
+                alert("Donation request sent successfully");
+                navigate("/user/donations");
+            }).catch((e) => {
+                alert("Something went wrong");
+            });
+        }
+        catch (e) {
+            alert("Something went wrong");
+        }
+    };
     return (
         <div className={`p-6 w-12/12`}>
             <form
@@ -172,6 +188,18 @@ const UserForm = () => {
                             />
                         </td>
                             </tr>
+                        <tr>
+                            <td>
+                                <label className="font-semibold leading-8">Date and Time:<font color="red">*</font></label>
+                                <input
+                                    className="w-full p-3 text-md border border-silver rounded"
+                                    type="datetime-local"
+                                    required
+                                    value={datetime}
+                                    onChange={(e) => setDatetime(e.target.value)}
+                                />
+                            </td>
+                        </tr>
                     </table>
                     <BanksSearch latitude={latitude} handle={handle} user={user} longitude={longitude} setBank={setBank} />
                     <button

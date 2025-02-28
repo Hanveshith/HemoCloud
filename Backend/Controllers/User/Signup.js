@@ -24,22 +24,38 @@ const signup = async (req, res) => {
         
 
         const {firstName, lastName, sex, bloodGroup, dateOfBirth, phone, address, photoURL, validProofURL, donorStatus, email, password, role} = req.body;
-        const user = await User.create({
-            firstName,
-            lastName,
-            sex,
-            bloodGroup,
-            dateOfBirth,
-            phone,
-            address,
-            photoURL,
-            validProofURL,
-            donorStatus: false,
-            email,
-            password: passwordHash,
-            role
-        });
-        const token = jwt.sign({ user: user._id, type: handle }, "kjnasjnnjsanhfhakaosihvihaabvnhunakwsncaksnnedfev");
+        let user;
+        if(handle == "bank"){
+            const {Name, address, phone, latitude, longitude} = req.body;
+            const bloodBank = await BloodBank.create({
+                Name,
+                Address: address,
+                phone,
+                latitude,
+                Longitude: longitude,
+                password: passwordHash
+            });
+            user = bloodBank;
+        }
+        else{
+            user = await User.create({
+                firstName,
+                lastName,
+                sex,
+                bloodGroup,
+                dateOfBirth,
+                phone,
+                address,
+                photoURL,
+                validProofURL,
+                donorStatus: false,
+                email,
+                password: passwordHash,
+                role
+            });
+        }
+        console.log(user);
+        const token = jwt.sign({ user: user.id, type: handle }, "kjnasjnnjsanhfhakaosihvihaabvnhunakwsncaksnnedfev");
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -47,7 +63,7 @@ const signup = async (req, res) => {
             sameSite: "none",
         }).send();
 
-        // res.status(201).json(user);
+        //res.status(201).json(user);
     }
     catch (error) {
         console.log(error)

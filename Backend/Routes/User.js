@@ -13,12 +13,15 @@ const {becomeDonor} = require('../Controllers/Donor/BecomeDonor');
 const {addBloodBank} = require('../Controllers/Admin/BloodBank');
 const {createRequest} = require('../Controllers/Receiver/request');
 const {fetchBloodRequests} = require('../Controllers/User/fetchBloodRequests');
+const { fetchBloodBankDetails } = require('../Controllers/User/fetchBloodbankDetails');
+
 
 
 route.post('/become-donor',becomeDonor);
 route.post('/request-blood',createRequest);
 route.post('/add-blood-bank',addBloodBank);
 route.get('/fetch-blood-requests/:id',fetchBloodRequests);
+route.get('/fetch-blood-bankdetails/:id',fetchBloodBankDetails);
 
 
 

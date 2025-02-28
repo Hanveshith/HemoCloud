@@ -2,9 +2,18 @@
 const { DataTypes } = require('sequelize');
 const {DonatingAppointment} = require('../../models');
 
+const { Donor } = require('../../models'); // Add this line to import the Donor model
+
 const createDonationAppointment = async (req, res) => {
     try {
         const {donorId, bloodBankId, dateTime, quantity} = req.body;
+        console.log(req.body);
+        // Check if donor exists
+        const donor = await Donor.findByPk(donorId);
+        if (!donor) {
+            return res.status(404).json({ error: 'Donor not found' });
+        }
+
         const donationAppointment = await DonatingAppointment.create({
             donorId,
             bloodBankId,
@@ -21,10 +30,10 @@ const createDonationAppointment = async (req, res) => {
 
 const DonationAppointments = async (req, res) => {
     try {
-        const {donorId} = req.body;
+        const {id} = req.params;
         const donationAppointment = await DonatingAppointment.findAll({
             where: {
-                donorId,
+                id,
             }
         });
         if(!donationAppointment) {

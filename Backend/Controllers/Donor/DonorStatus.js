@@ -2,15 +2,15 @@ const {Donor,Donation} = require('../../models');
 
 const fetchDonorStatus = async (req, res) => {
     try {
-        const {userId} = req.body;
+        const {id} = req.params;
         const donor = await Donor.findOne({
             where: {
-                userId,
+                userId: id,
                 status: true
             }
         });
         if(!donor) {
-            res.status(404).json({error: 'Donor not found'});
+            res.send({status: 404, message: "Donor not found"});
             return;
         }
         res.status(200).json(donor);

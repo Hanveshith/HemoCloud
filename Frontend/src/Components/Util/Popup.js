@@ -1,12 +1,25 @@
 import React from 'react'
 import mapboxgl from "mapbox-gl";
+import { useEffect } from 'react';
+import axios from "../Api"
 
 const Popup = (props) => {
+    const [data, setData] = React.useState(null);
+    console.log(props.data);
+    useEffect(() => {
+        axios.get(`/user/fetch-blood-bankdetails/${props.data}`).then((r) => {
+            setData(r.data);
+        }).catch((e) => {
+            alert("Something went wrong");
+        });
+    }, [props.popup]);
+    console.log(data);
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29yb2JvcmkiLCJhIjoiY2s3Y3FyaWx0MDIwbTNpbnc4emxkdndrbiJ9.9KeSiPVeMK0rWvJmTE0lVA';
+
     return (
         <div>
             {
-                props.popup != -1 && <div className="popup h-[150%] overflow-scroll">
+                props.popup !== -1 && <div className="popup h-[150%] overflow-scroll">
                     <div className='popup_inner rounded-lg p-7 overflow-y-scroll'>
                         <div>
                             <h1 className='text-2xl font-bold inline-block'>
@@ -16,32 +29,30 @@ const Popup = (props) => {
                         </div><br />
                         <table className='w-full'>
                             {
-                                props.data && <>
+                                data && <>
                                     {
-                                        Object.keys(props.data).map((e) => {
+                                        Object.keys(data).map((e) => {
                                             return (
-                                                e != "_id" && e != "longitude" && e != "latitude" && <tr className='border'>
+                                                e !== "_id" && e !== "longitude" && e !== "latitude" && <tr className='border' key={e}>
                                                     <td className='font-bold p-4 border'>{e[0].toUpperCase() + e.substr(1,)}</td>
-                                                    <td className='p-2'>{props.data[e] ? props.data[e] : "---"}</td>
+                                                    <td className='p-2'>{data[e] ? data[e] : "---"}</td>
                                                 </tr>
                                             )
                                         })
                                     }
-                                    {props.data.longitude && <tr className='border'>
+                                    {data.Longitude && <tr className='border'>
                                         <td className='font-bold p-4 border'>Location</td>
                                         <td className='p-2'>
-                                            {
-                                                <div id="map" className="w-full h-[200px]"></div>
-                                            }
+                                            <div id="map" className="w-full h-[200px]"></div>
                                             {
                                                 (() => {
                                                     setTimeout(() => {
-                                                        new mapboxgl.Marker().setLngLat([props.data.longitude, props.data.latitude]).addTo(new mapboxgl.Map({
+                                                        new mapboxgl.Marker().setLngLat([data.Longitude, data.latitude]).addTo(new mapboxgl.Map({
                                                             container: 'map', style: 'mapbox://styles/mapbox/streets-v12',
-                                                            center: [props.data.longitude, props.data.latitude], zoom: 10.7
+                                                            center: [data.Longitude, data.latitude], zoom: 10.7
                                                         }));
-                                                    }, 100)
-                                                    return <></>
+                                                    }, 100);
+                                                    return <></>;
                                                 })()
                                             }
                                         </td>
@@ -53,7 +64,7 @@ const Popup = (props) => {
                 </div>
             }
         </div>
-    )
+    );
 }
 
 export default Popup

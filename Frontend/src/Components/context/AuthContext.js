@@ -7,9 +7,12 @@ function AuthContextProvider(props) {
   const [loggedIn, setLoggedIn] = useState(undefined);
   const [user, setUser] = useState([]);
   const [role, setRole] = useState();
-
+  const [donor, setDonor] = useState(false);
   async function getLoggedIn() {
     const loggedInRes = await axios.get("http://localhost:3177/auth/loggedIn", { withCredentials: true });
+    const userRes = await axios.get(`http://localhost:3177/u/donor/donor-status/${loggedInRes.data.user.id}`, { withCredentials: true });
+    setDonor(userRes.data);  
+    console.log(loggedInRes.data);
     setLoggedIn(loggedInRes.data.auth);
     setUser(loggedInRes.data.user);
     setRole(loggedInRes.data.role);
@@ -20,7 +23,7 @@ function AuthContextProvider(props) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, user, getLoggedIn,role}}>
+    <AuthContext.Provider value={{ loggedIn, user, getLoggedIn,role,donor}}>
       {props.children}
     </AuthContext.Provider>
   );

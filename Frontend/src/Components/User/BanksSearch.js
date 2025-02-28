@@ -10,15 +10,12 @@ const BanksSearch = (props) => {
 
     useEffect(() => {
         axios.post('/bank/user', props, { withCredentials: true }).then(async (res) => {
-            setData(res.data);
+            setData(Array.isArray(res.data) ? res.data : [res.data]);
         }, (error) => {
             setData([]);
         });
     }, [props.latitude, props.longitude]);
     mapboxgl.accessToken = 'pk.eyJ1IjoiY29yb2JvcmkiLCJhIjoiY2s3Y3FyaWx0MDIwbTNpbnc4emxkdndrbiJ9.9KeSiPVeMK0rWvJmTE0lVA';
-    // console.log(data)
-
-    
     
     return (
         < div className='mx-2 mt-3'>

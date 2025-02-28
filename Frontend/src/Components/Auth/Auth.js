@@ -57,16 +57,13 @@ const Auth = (props) => {
         var formData;
         if (handle == "bank") {
             formData = {
-                firstName: firstName,
-                lastName: lastName,
-                sex: gender,
-                bloodGroup: 'A+',
-                dateOfBirth: dateOfBirth,
+                Name: firstName,
                 phone: phone,
                 email: bankmail,
                 password: password,
                 address: address,
-                role: role
+                latitude: latitude,
+                longitude: longitude,
                 // stock: { 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0, 'O+': 0, 'O-': 0 }
             };
         } else {

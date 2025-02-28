@@ -41,7 +41,7 @@ route.post('/create-blood-collection',createBloodCollection);
 route.get('/fetch-blood-collection',fetchBloodCollection);
 route.put('/update-blood-collection',updateBloodCollection);
 route.delete('/delete-blood-collection',deleteBloodCollection);
-route.put('/accept-donor',acceptUserAsDonor);
+route.put('/accept-donor/:id',acceptUserAsDonor);
 route.get('/fetch-donating-appointments',fetchDonatingAppointments);
 route.put('/accept-donating-appointment',acceptDonatingAppointment);
 route.post('/create-donation',createDonation);

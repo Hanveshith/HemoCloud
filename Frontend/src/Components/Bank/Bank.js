@@ -7,6 +7,8 @@ import History from '../Util/History';
 import RegisterBank from './RegisterBank';
 import Camps from './Camps';
 import Stock from './Stock';
+import DonorRequests from './DonorRequests';
+
 
 const Bank = () => {
     const { user } = useContext(AuthContext);
@@ -19,7 +21,9 @@ const Bank = () => {
         { to: "/bank/donations", icon: "fa-hand-holding-medical", title: "Donations" },
         { to: "/bank/requests", icon: "fa-clock-rotate-left", title: "Requests" },
         { to: "/bank/camps", icon: "fa-clock-rotate-left", title: "Blood Donation Camps" },
-        { to: "/bank/registerBank", icon: "fa-rotate", title: "Register new Camp" }
+        { to: "/bank/registerBank", icon: "fa-rotate", title: "Register new Camp" },
+        { to: "/bank/donarrequests", icon: "fa-clock-rotate-left", title: "Donor Requests" },
+
     ];
 
     return (
@@ -32,6 +36,8 @@ const Bank = () => {
                 {handle === "requests" && <History user="bank" id={user.id} handle={handle} />}
                 {handle === "camps" && <Camps />}
                 {handle === "registerBank" && <RegisterBank todo="register" bank={user} />}
+                {handle === "donarrequests" && <DonorRequests handle={handle} />}
+
             </div>
         </div>
     );

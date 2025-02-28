@@ -11,7 +11,7 @@ import BecomeDonor from './BecomeDonor';
 
 const User = () => {
     const { handle } = useParams();
-    const { user } = useContext(AuthContext);
+    const { user,donor } = useContext(AuthContext);
     const nav = [
         { to: "/user/profile", icon: "fa-user", title: "My Profile" },
         { to: user.donorStatus == true ? "/user/donate" : "/user/become-donor", icon: "fa-hand-holding-medical", title: user.donorStatus == true ? "Donate Blood" : "Become a Donor"},
@@ -29,7 +29,7 @@ const User = () => {
                 {handle === "donate" && <UserForm />}
                 {handle === "become-donor" && <BecomeDonor />}
                 {handle === "request" && <UserForm />}
-                {handle === "donations" && <History user="user" id={user.id} handle={handle} />}
+                {handle === "donations" && <History user="user" id={user.id} donorId={donor.id} handle={handle} />}
                 {handle === "requests" && <History user="user" id={user.id} handle={handle} />}
                 {handle === "camps" && <Camps />}
             </div>
