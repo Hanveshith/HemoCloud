@@ -33,7 +33,7 @@ const DonationAppointments = async (req, res) => {
         const {id} = req.params;
         const donationAppointment = await DonatingAppointment.findAll({
             where: {
-                id,
+                donorId: id,
             }
         });
         if(!donationAppointment) {

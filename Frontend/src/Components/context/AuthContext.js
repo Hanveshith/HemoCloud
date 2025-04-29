@@ -10,7 +10,8 @@ function AuthContextProvider(props) {
   const [donor, setDonor] = useState(false);
   async function getLoggedIn() {
     const loggedInRes = await axios.get("http://localhost:3177/auth/loggedIn", { withCredentials: true });
-    const userRes = await axios.get(`http://localhost:3177/u/donor/donor-status/${loggedInRes.data.user.id}`, { withCredentials: true });
+    console.log(loggedInRes.data.role);
+    const userRes = loggedInRes.data.role !== "bank" ? await axios.get(`http://localhost:3177/u/donor/donor-status/${loggedInRes.data.user.id}`, { withCredentials: true }) : "null";
     setDonor(userRes.data);  
     console.log(loggedInRes.data);
     setLoggedIn(loggedInRes.data.auth);

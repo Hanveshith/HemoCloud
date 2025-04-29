@@ -90,7 +90,7 @@ const UserForm = () => {
     const donate = () => {
         try {
             axios.get(`/u/donor/donor-status/${user.id}`,{ withCredentials: true }).then((r) => {
-                setDonorId(r.data.id);
+                setDonorId(r.id);
             }).catch((e) => {
                 alert("Something went wrong");
             });

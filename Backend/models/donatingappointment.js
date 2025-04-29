@@ -41,6 +41,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: false, // Sets a default value if not provided
     },
+    approved: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // Sets a default value if not provided
+    },
+    rejected: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // Sets a default value if not provided
+    },
   }, {
     sequelize,
     modelName: 'DonatingAppointment',

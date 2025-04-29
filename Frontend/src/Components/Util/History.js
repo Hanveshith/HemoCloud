@@ -13,10 +13,18 @@ const History = (props) => {
     const choices = ["All", 'Pending', 'Approved', 'Denied', props.handle == "donations" ? 'Donated' : "Completed"];
     const [id, setId] = useState(-1);
     const [newStat, setnewStat] = useState("");
-    console.log(props.donorId)
     useEffect(() => {
-        if (props.handle == "donations") {
+        console.log(props)
+        if (props.handle == "donations" && props.user == "user") {
             axios.get(`/u/donor/donation-appointments/${props.donorId}`, { withCredentials: true }).then((r) => {
+                setData(r.data);
+            }).catch((e) => {
+                alert("Something went wrong")
+            });
+        }
+        else if (props.handle == "donations" && props.user == "bank") {
+            axios.get(`/bank/fetch-donating-appointments/${props.id}`, { withCredentials: true }).then((r) => {
+                console.log(r.data)
                 setData(r.data);
             }).catch((e) => {
                 alert("Something went wrong")
@@ -28,7 +36,7 @@ const History = (props) => {
                 alert("Something went wrong")
             });
         }
-    }, [props.handle, props.donorId, props.user, props.id]);
+    }, [props.handle, props.donorId, props.user, props.id, status]);
 
     useEffect(() => {
         if (id != -1) {
@@ -36,7 +44,7 @@ const History = (props) => {
         }
     }, [id]);
 
-    console.log(data)
+    console.log("data", data)
     return (
         <div className={s1}>
             <div className='text-right'>
@@ -73,32 +81,65 @@ const History = (props) => {
                     {
                         data.map((e, i) =>
                             props.user == "bank" ? <tr className={status == "All" ? "" : status != e.status ? "hidden" : ""}>
-                                <td className='border underline decoration-dotted underline-offset-4 cursor-pointer p-3' onClick={() => setPopup(i)}>{props.handle == "donations" ? e.userId.name : e.name} Hanveshith</td>
-                                <td className='border p-3'>{props.handle == "donations" ? e.userId.age : e.age} 21</td>
-                                <td className='border p-3'>{props.handle == "donations" ? e.userId.bloodGroup : e.bloodGroup} AB+</td>
-                                {/* <td className='border p-3'>{
-                                    props.handle == "donations" ?
-                                        e.userId.gender[0].toUpperCase() + e.userId.gender.substr(1,) :
-                                        e.gender[0].toUpperCase() + e.gender.substr(1,)
-                                }</td> */}
-                                <td className='border p-3'>M</td>
-                                <td className='border p-3'>1</td>
-                                <td className='border p-3'>{props.handle == "donations" ? (e.disease ? e.disease : "---") : (e.reason ? e.reason : "---")}</td>
-                                <td className='border p-3'>{(() => {
-                                    let date = e.date.split(" ");
-                                    return <>
-                                        {date[2]}<br />
-                                        <code><small>{date[0] + date[1]}</small></code>
-                                    </>
-                                })()}</td>
-                                <td className='border p-3'>
-                                    <Status status={status == "All" ? e.status : status} id={e.id} i={i} setId={setId} units={e.quantity} bloodGroup={props.handle == "donations" ? e.userId.bloodGroup : e.group} setStatus={setnewStat} handle={props.handle} />
-                                </td>
-                            </tr> : <tr className={status == "All" ? "" : status != e.status ? "hidden" : ""}>
+                                <td className='border underline decoration-dotted underline-offset-4 cursor-pointer p-3' onClick={() => setPopup(i)}>{props.handle == "donations" ? e.name : e.userName}</td>
+                                <td className='border p-3'>{props.handle == "donations" ? e.donarAge : e.useAge} 21</td>
+                                <td className='border p-3'>{props.handle == "donations" ? e.bloodGroup : e.group}</td>
+                                <td className='border p-3'>{e.donorGender} M</td>
                                 <td className='border p-3'>{e.quantity}</td>
-                                {/* <td className='border p-3'>{props.handle == "donations" ? (e.disease ? e.disease : "---") : (e.reason ? e.reason : "---")}</td> */}
                                 <td className='border p-3'>
-                                    {e.dateTime ? new Date(e.dateTime).toLocaleString('en-US', {
+                                    {e.date ? new Date(e.date).toLocaleString('en-US', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    }) : 'N/A'}
+                                </td>
+                                <td className='border p-3'>
+                                    <Status
+                                        status={status === "All" ? e.status : status}
+                                        id={e.id}
+                                        i={i}
+                                        setId={setId}
+                                        units={e.quantity}
+                                        bloodGroup={props.handle === "donations" ? e.bloodGroup : e.group}
+                                        bloodBankId={e.bloodBankId}
+                                        donorId={e.donorId ? e.donorId : 0}
+                                        setStatus={setnewStat}
+                                        handle={props.handle}
+                                        approved={e.approved}
+                                    />
+                                </td>
+                                <td className='border p-3'>
+                                    <button
+                                        className='border-2 px-2 py-2 bg-red hover:bg-red/70 rounded-xl hover:shadow-md'
+                                        onClick={() => {
+                                            if (props.handle == "requests") {
+                                                axios.delete(`/user/delete-blood-request/${e.id}`, { withCredentials: true }).then((r) => {
+                                                    alert("Deleted");
+                                                    window.location.reload();
+                                                }).catch((e) => {
+                                                    alert("Something went wrong");
+                                                });
+                                            }
+                                            else if (props.handle == "donations") {
+                                                axios.delete(`/u/donor/delete-donation-appointment/${e.id}`, { withCredentials: true }).then((r) => {
+                                                    alert("Deleted");
+                                                    window.location.reload();
+                                                }).catch((e) => {
+                                                    alert("Something went wrong");
+                                                });
+                                            }
+                                        }}
+                                        disabled={e.approved || e.status === true}
+                                    >
+                                        Cancel
+                                    </button>
+                                </td>
+                            </tr> : <tr className={status === "All" ? "" : status !== e.status ? "hidden" : ""}>
+                                <td className='border p-3'>{e.quantity}</td>
+                                <td className='border p-3'>
+                                    {e.date ? new Date(e.date).toLocaleString('en-US', {
                                         day: '2-digit',
                                         month: 'short',
                                         year: 'numeric',
@@ -107,16 +148,53 @@ const History = (props) => {
                                     }) : 'N/A'}
                                 </td>
                                 <td className='border p-3 cursor-pointer underline decoration-dotted underline-offset-4' onClick={() => setPopup(i)}>view</td>
-                                <td className='border p-3'><span className={(e.status == false ? "border-metal text-metal" : (e.status == true ? "border-yellowX text-yellowX " : (e.rejected == false ? "border-red text-red" : "border-green text-green"))) + ' border-2 px-4 py-2 rounded-xl hover:shadow-md'}>{(e.status == false ? "Pending" : "Accepted")}</span></td>
                                 <td className='border p-3'>
-                                    <button className='border-2 px-2 py-2 bg-red hover:bg-red/70 rounded-xl hover:shadow-md' onClick={() => {
-                                        axios.delete(`/user/delete-blood-request/${e.id}`, { withCredentials: true }).then((r) => {
-                                            alert("Deleted");
-                                            window.location.reload();
-                                        }).catch((e) => {
-                                            alert("Something went wrong");
-                                        });
-                                    }}>Cancel</button>
+                                    <span
+                                        className={
+                                            (e.status === false && e.approved === true
+                                                ? "border-yellowX text-yellowX"
+                                                : e.status === false
+                                                    ? "border-metal text-metal"
+                                                    : e.rejected === true
+                                                        ? "border-red text-red"
+                                                        : "border-green text-green") +
+                                            " border-2 px-4 py-2 rounded-xl hover:shadow-md"
+                                        }
+                                    >
+                                        {e.status === false && e.approved === true
+                                            ? "Approved"
+                                            : e.status === false
+                                                ? "Pending"
+                                                : e.rejected === true
+                                                    ? "Rejected"
+                                                    : "Accepted"}
+                                    </span>
+                                </td>
+                                <td className='border p-3'>
+                                    <button
+                                        className='border-2 px-2 py-2 bg-red hover:bg-red/70 rounded-xl hover:shadow-md'
+                                        onClick={() => {
+                                            if (props.handle == "requests") {
+                                                axios.delete(`/user/delete-blood-request/${e.id}`, { withCredentials: true }).then((r) => {
+                                                    alert("Deleted");
+                                                    window.location.reload();
+                                                }).catch((e) => {
+                                                    alert("Something went wrong");
+                                                });
+                                            }
+                                            else if (props.handle == "donations") {
+                                                axios.delete(`/u/donor/delete-donation-appointment/${e.id}`, { withCredentials: true }).then((r) => {
+                                                    alert("Deleted");
+                                                    window.location.reload();
+                                                }).catch((e) => {
+                                                    alert("Something went wrong");
+                                                });
+                                            }
+                                        }}
+                                        disabled={e.approved || e.status === true}
+                                    >
+                                        Cancel
+                                    </button>
                                 </td>
                             </tr>
                         )

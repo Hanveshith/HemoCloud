@@ -31,7 +31,7 @@ const Bank = () => {
             <UserNav data={nav} />
             <div className="w-full flex justify-center p-4">
                 {handle === "profile" && <EditProfile />}
-                {handle === "stock" && <Stock />}
+                {handle === "stock" && <Stock id={user.id}/>}
                 {handle === "donations" && <History user="bank" id={user.id} handle={handle} />}
                 {handle === "requests" && <History user="bank" id={user.id} handle={handle} />}
                 {handle === "camps" && <Camps />}

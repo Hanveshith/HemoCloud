@@ -9,7 +9,7 @@ const BanksSearch = (props) => {
     const [selected, setSelected] = useState(-1);
 
     useEffect(() => {
-        axios.post('/bank/user', props, { withCredentials: true }).then(async (res) => {
+        axios.post('/bank/banks', props, { withCredentials: true }).then(async (res) => {
             setData(Array.isArray(res.data) ? res.data : [res.data]);
         }, (error) => {
             setData([]);

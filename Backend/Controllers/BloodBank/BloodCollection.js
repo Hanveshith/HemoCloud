@@ -1,14 +1,16 @@
-const {Requests,BloodCollection} = require('../../Models/BloodCollection');
+
+const {BloodCollection} = require('../../models');
+
 const {Op} = require('sequelize');
 
 const createBloodCollection = async (req, res) => {
     try {
-        const {bloodBankId, group, totalquantity} = req.body;
+        const {bloodBankId, group, totalQuantity,bestbefore} = req.body;
         const bloodCollection = await BloodCollection.create({
             bloodBankId,
             group,
-            totalquantity,
-            bestBefore
+            totalQuantity,
+            bestbefore
         });
 
         res.status(201).json(bloodCollection);
@@ -20,14 +22,14 @@ const createBloodCollection = async (req, res) => {
 
 const fetchBloodCollection = async (req, res) => {
     try {
-        const {bloodBankId} = req.body;
+        const {id} = req.params;
         const bloodCollection = await BloodCollection.findAll({
             where: {
-                bloodBankId,
-                bestBefore: {
+                bloodBankId: id,
+                bestbefore: {
                     [Op.gt]: new Date().toISOString()
                 },
-                totalquantity: {
+                totalQuantity: {
                     [Op.gt]: 0
                 }
             }
@@ -45,14 +47,16 @@ const fetchBloodCollection = async (req, res) => {
 
 const updateBloodCollection = async (req, res) => {
     try {
-        const {bloodBankId, group, totalquantity,bestBefore} = req.body;
+        const {bloodBankId, group, totalQuantity,bestbefore} = req.body;
+        const {id} = req.params;
         const bloodCollection = await BloodCollection.update({
-            totalquantity,
-            bestBefore
+            totalQuantity,
+            bestbefore
         },{
             where: {
                 bloodBankId,
-                group
+                group,
+                id
             }
         });
 
@@ -65,11 +69,10 @@ const updateBloodCollection = async (req, res) => {
 
 const deleteBloodCollection = async (req, res) => {
     try {
-        const {bloodBankId, group} = req.body;
+        const {id} = req.params;
         const bloodCollection = await BloodCollection.destroy({
             where: {
-                bloodBankId,
-                group
+                id
             }
         });
         if(!bloodCollection) {

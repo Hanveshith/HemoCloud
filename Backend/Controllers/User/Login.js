@@ -8,7 +8,7 @@ const login = async (req, res) => {
         const {phone, password} = req.body;
         console.log(req.body);
         const handle = req.params.handle;
-        const existingUser = await (handle == "bank" ? BloodBank.findOne({ phone: phone }) : User.findOne({
+        const existingUser = await (handle == "bank" ? BloodBank.findOne( {where: { phone: phone }} ) : User.findOne({
             where: { phone: phone }
         }));
         

@@ -1,13 +1,10 @@
-
-
 const express = require('express');
 const app = express();
 const path = require("path");
-const bodypaser = require("body-parser");
+const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
-
-app.use(bodypaser.json());
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
